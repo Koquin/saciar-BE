@@ -29,9 +29,9 @@ class ClienteService:
             telefone=CreateClienteDto.telefone,
             pontos=CreateClienteDto.pontos,
             qtd_gasta=0,
-            created_at=datetime.now(),
-            updated_at=datetime.now())
-        print(vars(clienteModel))    
+            created_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            updated_at=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        
         response = self.clienteRepository.create_cliente(clienteModel)
         logger.info(f'Cliente created successfully. Response: {response}')
         return response
@@ -60,19 +60,24 @@ class ClienteService:
         clientes = self.clienteRepository.search_clients(query)
         return [CreateClienteDto(nome=c.nome, cpf=c.cpf, telefone=c.telefone, pontos=c.pontos) for c in clientes]
     
-    def updateCliente(self, updateClienteDto, idCliente):
-        logger.info(f'In ClienteService, method: updateCliente, variables: \nupdateCliente: {updateClienteDto}, idCliente: {idCliente}')
-        cliente =  self.clienteRepository.get_cliente_by_id(idCliente)
-        if not cliente:
-            logger.error(f'Error finding the cliente with id {idCliente}.')
-            raise ClienteNotFoundException()
-        
-        updatedData = updateClienteDto.model_dump(exclude_none = True)
+    def updateCliente(self, idCliente, updateClienteDto):
+            logger.info(f'In ClienteService, method: updateCliente, variables: \nupdateCliente: {updateClienteDto}, idCliente: {idCliente}')
+            
+            cliente = self.clienteRepository.get_cliente_by_id(idCliente)
+            if not cliente:
+                logger.error(f'Error finding the cliente with id {idCliente}.')
+                raise ClienteNotFoundException()
+            
+            updatedData = updateClienteDto.model_dump(exclude_none=True)
 
-        updatedCliente =  self.clienteRepository.update_cliente(idCliente, updatedData)
-        logger.info(f'Cliente with id {idCliente} updated successfully.')
-        return updatedCliente
-    
+            updatedData['updated_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            
+            updatedCliente = self.clienteRepository.update_cliente(idCliente, updatedData)
+            
+            logger.info(f'Cliente with id {idCliente} updated successfully.')
+            logger.info(f'\nUpdatedCliente: {updatedCliente}')
+            return updatedCliente
+
     def deleteClienteById(self, idCliente: str):
         logger.info(f'In ClienteService, method: deleteCliente, variables: \nidCliente: {idCliente}')
         cliente =  self.clienteRepository.get_cliente_by_id(idCliente)

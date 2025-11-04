@@ -50,10 +50,24 @@ class ClienteRepository:
         return clientes
 
     def update_cliente(self, cliente_id: str, updated_data: dict) -> bool:
-        print(f'In ClienteRepository, method: update_cliente, variables: \ncliente_id: {cliente_id}, updated_data: {updated_data}')
-        result = self.collection.update_one({"_id": cliente_id}, {"$set": updated_data})
-        return result.modified_count > 0
-
+            print(f'In ClienteRepository, method: update_cliente, variables: \ncliente_id: {cliente_id}, updated_data: {updated_data}')
+            
+            try:
+                object_id = ObjectId(cliente_id)
+                
+                result = self.collection.update_one(
+                    {"_id": object_id},
+                    {"$set": updated_data}
+                )
+                return result.acknowledged
+                
+            except InvalidId:
+                print(f"Erro: ID de cliente inválido (formato incorreto): {cliente_id}")
+                return False
+            except Exception as e:
+                print(f"Erro ao tentar atualizar cliente: {e}")
+                return False
+            
     def delete_cliente(self, cliente_id: str) -> bool:
             print(f'In ClienteRepository, method: delete_cliente, variables: \ncliente_id: {cliente_id}')
             

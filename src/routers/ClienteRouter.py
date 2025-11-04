@@ -5,6 +5,7 @@ from services.ClienteService import ClienteService
 from dtos.ClienteDtos import CreateClienteDto
 from typing import List
 from fastapi import Query
+from dtos.ClienteDtos import UpdateClienteDto
 
 db_name = "gerenciamento_clientes"
 db_url = "mongodb://localhost:27017/"
@@ -28,9 +29,10 @@ def getAllClientes():
     return response
     
 @router.put("/{idCliente}", summary="Update a cliente by ID", status_code=200)
-def updateCliente(idCliente, atualizarClienteDto):
+def updateCliente(idCliente, atualizarClienteDto: UpdateClienteDto):
     print(f'In ClienteRouter, method: updateCliente, variables: \nidCliente: {idCliente}, atualizarClienteDto: {atualizarClienteDto}')
-    return clienteController.updateCliente(idCliente, atualizarClienteDto)
+    response = clienteController.updateCliente(idCliente, atualizarClienteDto)
+    return response
     
 @router.delete("/{idCliente}", summary="Delete a cliente by ID", status_code=204)
 def deleteCliente(idCliente):

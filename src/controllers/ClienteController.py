@@ -18,7 +18,7 @@ class ClienteController:
 
     def updateCliente(self, idCliente, atualizarClienteDto):
         print(f'In ClienteController, method: updateCliente, variables: \nidCliente: {idCliente}, atualizarClienteDto: {atualizarClienteDto}')
-        return self.clienteService.atualizarCliente(idCliente, atualizarClienteDto)
+        return self.clienteService.updateCliente(idCliente, atualizarClienteDto)
 
     def deleteCliente(self, idCliente: str):
         print(f'In ClienteController, method: deleteCliente, variables: \n idCliente: {idCliente}')
