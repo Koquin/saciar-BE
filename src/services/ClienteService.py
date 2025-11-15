@@ -89,3 +89,21 @@ class ClienteService:
         deletedCliente =  self.clienteRepository.delete_cliente(cliente.id)
         logger.info(f'Cliente with ID {idCliente} deleted successfully.')
         return deletedCliente
+
+    def getClienteByCpf(self, cpf: str):
+        logger.info(f'In ClienteService, method: getClienteByCpf, variables: \ncpf: {cpf}')
+        cliente = self.clienteRepository.get_cliente_by_cpf(cpf)
+        
+        if not cliente:
+            logger.warning(f'No client found with CPF: {cpf}')
+            raise ClienteNotFoundException()
+
+        cliente_dto = {
+            "id": cliente.id,
+            "nome": cliente.nome,
+            "cpf": cliente.cpf,
+            "telefone": cliente.telefone,
+            "pontos": cliente.pontos,
+            "qtd_gasta": cliente.qtd_gasta
+        }
+        return cliente_dto

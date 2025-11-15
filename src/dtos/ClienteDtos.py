@@ -17,3 +17,10 @@ class UpdateClienteDto(BaseModel):
     cpf: str | None = None
     telefone: str | None = None
     pontos: int | None = None
+
+class GetClienteByCpfDto(BaseModel):
+    cpf: str
+
+class UsePointsDto(BaseModel):
+    cliente_id: str
+    points: int

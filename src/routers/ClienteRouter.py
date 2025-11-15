@@ -2,10 +2,9 @@ from fastapi import APIRouter
 from controllers.ClienteController import ClienteController
 from repositories.ClienteRepository import ClienteRepository
 from services.ClienteService import ClienteService
-from dtos.ClienteDtos import CreateClienteDto
+from dtos.ClienteDtos import CreateClienteDto, UpdateClienteDto, GetClienteByCpfDto
 from typing import List
 from fastapi import Query
-from dtos.ClienteDtos import UpdateClienteDto
 
 db_name = "gerenciamento_clientes"
 db_url = "mongodb://localhost:27017/"
@@ -44,3 +43,9 @@ def deleteCliente(idCliente):
 def search_clients(q: str = Query(None, description="Nome, CPF ou telefone para buscar")):
     print(f'In ClienteRouter, method: search_clients, variables: \nquery: {q}')
     return clienteController.search_clients(q)
+
+@router.post("/info", summary="Get a cliente by CPF", status_code=200)
+def getClienteByCpf(getClienteByCpfDto: GetClienteByCpfDto):
+    print(f'In ClienteRouter, method: getClienteByCpf, variables: \ngetClienteByCpfDto: {getClienteByCpfDto}')
+    response = clienteController.getClienteByCpf(getClienteByCpfDto.cpf)
+    return response

@@ -29,3 +29,8 @@ class ClienteController:
         if not query:
             return self.get_all_clientes()
         return self.clienteService.search_clients_dto(query)
+    
+    def getClienteByCpf(self, cpf: str):
+        print(f'In ClienteController, method: getClienteByCpf, variables: \ncpf: {cpf}')
+        cliente = self.clienteService.getClienteByCpf(cpf)
+        return cliente
