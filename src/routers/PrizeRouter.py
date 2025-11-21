@@ -16,20 +16,20 @@ router =APIRouter (prefix ="/prizes",tags =["Prizes"])
 @router .get ("/",summary ="Get all prizes",status_code =200 )
 def getAllPrizes ():
 	print ("In PrizeRouter, method: getAllPrizes")
-	response =prizeController .get_all_prizes ()
+	response = prizeController.get_all_prizes ()
 	return response 
 
 
 @router .put ("/",summary ="Update the full list of prizes",status_code =200 )
 def putPrizes (prizes :List [dict ]):
 	print (f'In PrizeRouter, method: putPrizes, variables: \nprizes: {prizes }')
-	success =prizeController .update_prizes (prizes )
+	success =prizeController.update_prizes (prizes )
 	return {"success":bool (success )}
 
 
 @router .post ("/usepoints",summary ="Use points to redeem a prize",status_code =200 )
 def usePoints (usePointsDto :UsePointsDto ):
 	print (f'In PrizeRouter, method: usePoints, variables: \nusePointsDto: {usePointsDto }')
-	response =prizeController .use_points (usePointsDto .cliente_id ,usePointsDto .points )
+	response =prizeController.use_points (usePointsDto .cliente_id ,usePointsDto .points )
 	return response 
 
