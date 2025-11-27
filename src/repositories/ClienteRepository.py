@@ -30,6 +30,9 @@ class ClienteRepository :
                 if data :
                     if '_id'in data :
                         data ['id']=str (data .pop ('_id'))
+                    # Add default troco if not present (for legacy clients)
+                    if 'troco' not in data :
+                        data ['troco'] = 0.0
                     return Cliente (**data )
                 return None 
             except InvalidId :
@@ -45,6 +48,9 @@ class ClienteRepository :
         for data in self .collection .find ():
             data ["id"]=str (data ["_id"])
             del data ["_id"]
+            # Add default troco if not present (for legacy clients)
+            if 'troco' not in data :
+                data ['troco'] = 0.0
             clientes .append (Cliente (**data ))
             print (f'Cliente found: {data }')
         return clientes 
@@ -88,11 +94,14 @@ class ClienteRepository :
                 print (f"Erro ao tentar deletar cliente: {e }")
                 return False 
 
-    def get_cliente_by_cpf (self ,cpf :str )->Optional [Cliente ]:
-        print (f'In ClienteRepository, method: get_cliente_by_cpf, variables: \ncpf: {cpf }')
-        data =self .collection .find_one ({"cpf":cpf })
+    def get_cliente_by_phone (self ,telefone :str )->Optional [Cliente ]:
+        print (f'In ClienteRepository, method: get_cliente_by_phone, variables: \ntelefone: {telefone }')
+        data =self .collection .find_one ({"telefone":telefone })
         if data :
             data ["id"]=str (data .pop ("_id"))
+            # Add default troco if not present (for legacy clients)
+            if 'troco' not in data :
+                data ['troco'] = 0.0
             return Cliente (**data )
         return None 
 
@@ -103,11 +112,13 @@ class ClienteRepository :
         for data in self .collection .find ({
         "$or":[
         {"nome":{"$regex":regex }},
-        {"cpf":{"$regex":regex }},
         {"telefone":{"$regex":regex }}
         ]
         }):
             data ["id"]=str (data ["_id"])
             del data ["_id"]
+            # Add default troco if not present (for legacy clients)
+            if 'troco' not in data :
+                data ['troco'] = 0.0
             clientes .append (Cliente (**data ))
         return clientes 

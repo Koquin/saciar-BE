@@ -2,6 +2,8 @@ import logging
 from typing import Optional 
 from repositories .PrizeRepository import PrizeRepository 
 from repositories .ClienteRepository import ClienteRepository 
+from repositories .RedeemRepository import RedeemRepository
+from models .Redeem import Redeem
 from exceptions .ClienteNotFoundException import ClienteNotFoundException 
 
 logging .basicConfig (level =logging .INFO ,format ='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -13,6 +15,7 @@ class PrizeService :
         logger .info (f'Initiating PrizeService, variables: \nprizeRepository: {prizeRepository }')
         self .prizeRepository =prizeRepository 
         self .clienteRepository =ClienteRepository (db_name ,db_url )
+        self .redeemRepository =RedeemRepository (db_name ,db_url )
 
     def get_all_prizes (self ):
         logger .info ('In PrizeService, method: get_all_prizes')
@@ -74,22 +77,44 @@ class PrizeService :
             'pontos':0 ,
             'updated_at':__import__ ('datetime').datetime .now ().strftime ("%Y-%m-%d %H:%M:%S")
             }
+            # create a redeem record (snapshot cliente nome/telefone) similar to RedeemService
+            try :
+                redeemModel =Redeem (
+                id =None ,
+                cliente_id =cliente .id ,
+                cliente_nome =getattr (cliente ,'nome',None ),
+                cliente_telefone =getattr (cliente ,'telefone',None ),
+                premio =matching_prize .get ('premio','Prêmio desconhecido'),
+                pontos =points ,
+                created_at =__import__ ('datetime').datetime .now ().strftime ("%Y-%m-%d %H:%M:%S"),
+                updated_at =__import__ ('datetime').datetime .now ().strftime ("%Y-%m-%d %H:%M:%S"))
+
+                redeem_response =self .redeemRepository .create_redeem (redeemModel )
+            except Exception as e :
+                logger .error (f'Error creating redeem record: {e }')
+                redeem_response =None
 
             update_result =self .clienteRepository .update_cliente (cliente .id ,updated_data )
 
             if update_result :
                 logger .info (f'Cliente {cliente_id } points reset to 0 after redeeming prize')
-                return {
+                resp = {
                 'success':True ,
                 'pontos':points ,
                 'premio':matching_prize .get ('premio','Prêmio desconhecido')
                 }
+                if redeem_response is not None :
+                    resp ['redeem']=redeem_response
+                return resp
             else :
                 logger .error (f'Failed to update cliente {cliente_id } points')
-                return {
+                resp = {
                 'success':False ,
                 'message':'Erro ao atualizar pontos do cliente'
                 }
+                if redeem_response is not None :
+                    resp ['redeem']=redeem_response
+                return resp
 
         except ClienteNotFoundException :
             logger .error (f'Cliente not found with ID: {cliente_id }')

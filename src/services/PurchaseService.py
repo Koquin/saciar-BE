@@ -20,30 +20,30 @@ class PurchaseService :
 		logger .info (f'In PurchaseService, method: createPurchase, variables: \npostPurchaseDto: {postPurchaseDto }')
 
 		if isinstance (postPurchaseDto ,dict ):
-			cpf =postPurchaseDto .get ('cpf')
+			telefone =postPurchaseDto .get ('telefone')
 			valor =postPurchaseDto .get ('valor',0 )
 			is_delivery =postPurchaseDto .get ('is_delivery',False )
 			is_from_client =postPurchaseDto .get ('isFromClient',False )
 		else :
-			cpf =getattr (postPurchaseDto ,'cpf',None )
+			telefone =getattr (postPurchaseDto ,'telefone',None )
 			valor =getattr (postPurchaseDto ,'valor',0 )
 			is_delivery =getattr (postPurchaseDto ,'is_delivery',False )
 			is_from_client =getattr (postPurchaseDto ,'isFromClient',False )
 
-		if not cpf or (isinstance (cpf ,str )and cpf .strip ()==""):
-			cpf ="CPF NÃO INFORMADO"
+		if not telefone or (isinstance (telefone ,str )and telefone .strip ()==""):
+			telefone ="TELEFONE NÃO INFORMADO"
 			cliente ="CLIENTE NÃO INFORMADO"
 			cliente_obj =None 
 		else :
 
-			cliente_obj =self .clienteRepository .get_cliente_by_cpf (cpf )
+			cliente_obj =self .clienteRepository .get_cliente_by_phone (telefone )
 
 			if is_from_client and not cliente_obj :
-				logger .info (f'Purchase originated from client and cliente not found for cpf {cpf }. Aborting create and returning info.')
+				logger .info (f'Purchase originated from client and cliente not found for phone {telefone }. Aborting create and returning info.')
 				return {
 				'created':False ,
 				'cliente_exists':False ,
-				'cpf':cpf ,
+				'telefone':telefone ,
 				'message':'Cliente não encontrado. Cadastre o cliente primeiro.'
 				}
 			cliente =cliente_obj .nome if cliente_obj else "CLIENTE NÃO ENCONTRADO"
@@ -58,7 +58,7 @@ class PurchaseService :
 			points_to_add =int (valor_float /15 )
 
 			purchase_payload ={
-			'cpf':cpf ,
+			'telefone':telefone ,
 			'cliente':cliente ,
 			'valor':float (valor_float ),
 			'is_delivery':bool (is_delivery ),
@@ -77,55 +77,66 @@ class PurchaseService :
 			logger .error (f'Error persisting purchase: {e }')
 
 		try :
-			cliente =self .clienteRepository .get_cliente_by_cpf (cpf )
+			cliente =self .clienteRepository .get_cliente_by_phone (telefone )
 			if cliente :
-				logger .info (f'Cliente found for cpf {cpf }: {cliente }')
+				logger .info (f'Cliente found for phone {telefone }: {cliente }')
 
 				try :
 					valor_float =float (valor )
 				except Exception :
 					valor_float =0.0 
 
-				points_to_add =int (valor_float /15 )
+				# Add existing troco to purchase value
+				troco_atual = getattr(cliente, 'troco', 0.0) or 0.0
+				valor_total_com_troco = valor_float + troco_atual
 
-				new_points =cliente .pontos +points_to_add 
-				if new_points >10 :
-					new_points =10 
+				# Calculate points from total (including troco)
+				points_to_add = int(valor_total_com_troco / 15)
+				# Calculate remaining troco (modulo operation)
+				novo_troco = valor_total_com_troco % 15
 
-				new_qtd_gasta =(cliente .qtd_gasta or 0 )+valor_float 
+				logger .info (f'Purchase calculation: valor={valor_float}, troco_atual={troco_atual}, valor_total={valor_total_com_troco}, points={points_to_add}, novo_troco={novo_troco}')
 
-				updated_data ={
-				'pontos':new_points ,
-				'qtd_gasta':new_qtd_gasta ,
-				'updated_at':datetime .now ().strftime ("%Y-%m-%d %H:%M:%S")
+				new_points = cliente .pontos + points_to_add 
+				if new_points > 10 :
+					new_points = 10 
+
+				new_qtd_gasta = (cliente .qtd_gasta or 0 ) + valor_float 
+
+				updated_data = {
+				'pontos': new_points ,
+				'qtd_gasta': new_qtd_gasta ,
+				'troco': novo_troco ,
+				'updated_at': datetime .now ().strftime ("%Y-%m-%d %H:%M:%S")
 				}
 
 				logger .info (f'Updating cliente {cliente .id } with data: {updated_data }')
-				updated =self .clienteRepository .update_cliente (cliente .id ,updated_data )
+				updated = self .clienteRepository .update_cliente (cliente .id , updated_data )
 
 				return {
-				'created':bool (purchase_record ),
-				'purchase':purchase_record ,
-				'cliente_updated':bool (updated ),
-				'cliente_id':getattr (cliente ,'id',None ),
-				'points_gained':points_to_add ,
-				'new_points_total':new_points 
+				'created': bool (purchase_record ),
+				'purchase': purchase_record ,
+				'cliente_updated': bool (updated ),
+				'cliente_id': getattr (cliente , 'id', None ),
+				'points_gained': points_to_add ,
+				'new_points_total': new_points ,
+				'new_troco': novo_troco
 				}
 			else :
-				logger .info (f'No cliente found for cpf {cpf }. Purchase created (if repository supported), no cliente update.')
+				logger .info (f'No cliente found for phone {telefone }. Purchase created (if repository supported), no cliente update.')
 				return {
-				'created':bool (purchase_record ),
-				'purchase':purchase_record ,
-				'cliente_updated':False ,
-				'cliente_id':None ,
-				'points_gained':points_to_add if 'points_to_add'in locals ()else 0 
+				'created': bool (purchase_record ),
+				'purchase': purchase_record ,
+				'cliente_updated': False ,
+				'cliente_id': None ,
+				'points_gained': points_to_add if 'points_to_add' in locals () else 0 
 				}
 		except Exception as e :
 			logger .error (f'Error while updating cliente for purchase: {e }')
 			return {
-			'purchase':purchase_record ,
-			'cliente_updated':False ,
-			'error':str (e )
+			'purchase': purchase_record ,
+			'cliente_updated': False ,
+			'error': str (e )
 			}
 
 	def getAllPurchases (self ):
@@ -153,7 +164,7 @@ class PurchaseService :
 				q_lower =query .lower ()
 				filtered =[p for p in all_purchases if (
 				(p .get ('nome')and q_lower in str (p .get ('nome')).lower ())or 
-				(p .get ('cpf')and q_lower in str (p .get ('cpf')).lower ())or 
+				(p .get ('telefone')and q_lower in str (p .get ('telefone')).lower ())or 
 				(p .get ('purchase_date')and q_lower in str (p .get ('purchase_date')).lower ())or 
 				(p .get ('created_at')and q_lower in str (p .get ('created_at')).lower ())
 				)]

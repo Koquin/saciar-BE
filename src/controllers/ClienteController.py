@@ -30,7 +30,7 @@ class ClienteController :
             return self .get_all_clientes ()
         return self .clienteService .search_clients_dto (query )
 
-    def getClienteByCpf (self ,cpf :str ):
-        print (f'In ClienteController, method: getClienteByCpf, variables: \ncpf: {cpf }')
-        cliente =self .clienteService .getClienteByCpf (cpf )
+    def getClienteByPhone (self ,telefone :str ):
+        print (f'In ClienteController, method: getClienteByPhone, variables: \ntelefone: {telefone }')
+        cliente =self .clienteService .getClienteByPhone (telefone )
         return cliente 

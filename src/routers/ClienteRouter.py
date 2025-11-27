@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from controllers .ClienteController import ClienteController 
 from repositories .ClienteRepository import ClienteRepository 
 from services .ClienteService import ClienteService 
-from dtos .ClienteDtos import CreateClienteDto ,UpdateClienteDto ,GetClienteByCpfDto 
+from dtos .ClienteDtos import CreateClienteDto ,UpdateClienteDto ,GetClienteByPhoneDto 
 from typing import List 
 from fastapi import Query 
 
@@ -44,8 +44,8 @@ def search_clients (q :str =Query (None ,description ="Nome, CPF ou telefone par
     print (f'In ClienteRouter, method: search_clients, variables: \nquery: {q }')
     return clienteController .search_clients (q )
 
-@router .post ("/info",summary ="Get a cliente by CPF",status_code =200 )
-def getClienteByCpf (getClienteByCpfDto :GetClienteByCpfDto ):
-    print (f'In ClienteRouter, method: getClienteByCpf, variables: \ngetClienteByCpfDto: {getClienteByCpfDto }')
-    response =clienteController .getClienteByCpf (getClienteByCpfDto .cpf )
+@router .post ("/info",summary ="Get a cliente by phone",status_code =200 )
+def getClienteByPhone (getClienteByPhoneDto :GetClienteByPhoneDto ):
+    print (f'In ClienteRouter, method: getClienteByPhone, variables: \ngetClienteByPhoneDto: {getClienteByPhoneDto }')
+    response =clienteController .getClienteByPhone (getClienteByPhoneDto .telefone )
     return response 

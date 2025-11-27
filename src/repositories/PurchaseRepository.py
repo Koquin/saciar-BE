@@ -45,7 +45,7 @@ class PurchaseRepository :
             regex ={'$regex':query ,'$options':'i'}
             search_conditions =[
             {'cliente':regex },
-            {'cpf':regex },
+            {'telefone':regex },
             {'data':regex }
             ]
 

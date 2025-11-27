@@ -4,6 +4,7 @@ from routers .AuthRouter import router as AuthRouter
 from routers .ClienteRouter import router as ClienteRouter 
 from routers .PurchaseRouter import router as PurchaseRouter 
 from routers .PrizeRouter import router as PrizeRouter 
+from routers .RedeemRouter import router as RedeemRouter 
 from fastapi .middleware .cors import CORSMiddleware 
 
 app =FastAPI (title ="Gerenciamento de Clientes API",version ="1.0.0",description ="API para gerenciar clientes, incluindo autenticação e operações CRUD.")
@@ -27,6 +28,7 @@ app .include_router (AuthRouter )
 app .include_router (ClienteRouter )
 app .include_router (PurchaseRouter )
 app .include_router (PrizeRouter )
+app .include_router (RedeemRouter )
 @app .get ("/")
 def read_root ():
     return {"message":"Welcome to the Gerenciamento de Clientes API. Visit /docs for API documentation."}

@@ -17,18 +17,20 @@ class ClienteService :
 
     def createCliente (self ,CreateClienteDto ):
         logger .info (f'In ClienteService, method: createCliente, variables: \ncreateClienteDto: {CreateClienteDto }')
-        cliente =self .clienteRepository .get_cliente_by_cpf (CreateClienteDto .cpf )
+        cliente =self .clienteRepository .get_cliente_by_phone (CreateClienteDto .telefone )
         if (cliente ):
-            logger .error ('Error finding cliente with this CPF, conflict detected.')
+            logger .error ('Error finding cliente with this phone, conflict detected.')
             raise ClienteConflictException ()
+
+        troco =getattr (CreateClienteDto ,'troco',0.0 )
 
         clienteModel =Cliente (
         id =None ,
-        cpf =CreateClienteDto .cpf ,
         nome =CreateClienteDto .nome ,
         telefone =CreateClienteDto .telefone ,
         pontos =CreateClienteDto .pontos ,
         qtd_gasta =0 ,
+        troco =troco ,
         created_at =datetime .now ().strftime ("%Y-%m-%d %H:%M:%S"),
         updated_at =datetime .now ().strftime ("%Y-%m-%d %H:%M:%S"))
 
@@ -48,9 +50,9 @@ class ClienteService :
         {
         "id":c .id ,
         "nome":c .nome ,
-        "cpf":c .cpf ,
         "telefone":c .telefone ,
-        "pontos":c .pontos 
+        "pontos":c .pontos ,
+        "troco":c .troco 
         }
         for c in clientes 
         ]
@@ -58,7 +60,7 @@ class ClienteService :
 
     def search_clients_dto (self ,query :str )->List [CreateClienteDto ]:
         clientes =self .clienteRepository .search_clients (query )
-        return [CreateClienteDto (nome =c .nome ,cpf =c .cpf ,telefone =c .telefone ,pontos =c .pontos )for c in clientes ]
+        return [CreateClienteDto (nome =c .nome ,telefone =c .telefone ,pontos =c .pontos ,troco =c .troco )for c in clientes ]
 
     def updateCliente (self ,idCliente ,updateClienteDto ):
             logger .info (f'In ClienteService, method: updateCliente, variables: \nupdateCliente: {updateClienteDto }, idCliente: {idCliente }')
@@ -90,20 +92,20 @@ class ClienteService :
         logger .info (f'Cliente with ID {idCliente } deleted successfully.')
         return deletedCliente 
 
-    def getClienteByCpf (self ,cpf :str ):
-        logger .info (f'In ClienteService, method: getClienteByCpf, variables: \ncpf: {cpf }')
-        cliente =self .clienteRepository .get_cliente_by_cpf (cpf )
+    def getClienteByPhone (self ,telefone :str ):
+        logger .info (f'In ClienteService, method: getClienteByPhone, variables: \ntelefone: {telefone }')
+        cliente =self .clienteRepository .get_cliente_by_phone (telefone )
 
         if not cliente :
-            logger .warning (f'No client found with CPF: {cpf }')
+            logger .warning (f'No client found with phone: {telefone }')
             raise ClienteNotFoundException ()
 
         cliente_dto ={
         "id":cliente .id ,
         "nome":cliente .nome ,
-        "cpf":cliente .cpf ,
         "telefone":cliente .telefone ,
         "pontos":cliente .pontos ,
-        "qtd_gasta":cliente .qtd_gasta 
+        "qtd_gasta":cliente .qtd_gasta ,
+        "troco":cliente .troco 
         }
         return cliente_dto 
