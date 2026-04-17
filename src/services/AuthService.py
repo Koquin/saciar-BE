@@ -1,5 +1,5 @@
-from exceptions .UserNotFoundException import UserNotFoundException 
-from exceptions .InvalidCredentialsException import InvalidCredentialsException 
+from ..exceptions.UserNotFoundException import UserNotFoundException
+from ..exceptions.InvalidCredentialsException import InvalidCredentialsException
 import bcrypt 
 
 class AuthService :

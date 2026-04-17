@@ -1,4 +1,4 @@
-from dtos .RedeemDtos import CreateRedeemDto 
+from ..dtos.RedeemDtos import CreateRedeemDto
 from typing import List 
 
 class RedeemController :

@@ -1,7 +1,7 @@
-from repositories .PurchaseRepository import PurchaseRepository 
-from services .PurchaseService import PurchaseService 
-from controllers .PurchaseController import PurchaseController 
-from fastapi import APIRouter ,Query 
+from ..repositories.PurchaseRepository import PurchaseRepository
+from ..services.PurchaseService import PurchaseService
+from ..controllers.PurchaseController import PurchaseController
+from fastapi import APIRouter, Query 
 db_name ="gerenciamento_clientes"
 db_url ="mongodb://localhost:27017/"
 
@@ -14,8 +14,10 @@ router =APIRouter (prefix ="/purchase",tags =["Purchases"])
 
 @router .get ("/",summary ="Get all purchases",status_code =200 )
 def getAllPurchases ():
-    print ("In PurchaseRouter, method: GetAllPurchases")
+    print ("In PurchaseRouter, method: getAllPurchases")
     response =purchaseController .getAllPurchases ()
+    print (f'PurchaseRouter returning {len (response )} purchases')
+    print (f'First purchase sample: {response [0 ]if response else "No purchases"}')
     return response 
 
 

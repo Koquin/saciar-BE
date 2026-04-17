@@ -1,8 +1,8 @@
-from fastapi import APIRouter 
-from controllers .AuthController import AuthController 
-from repositories .AuthRepository import AuthRepository 
-from services .AuthService import AuthService 
-from dtos import authDtos 
+from fastapi import APIRouter
+from ..controllers.AuthController import AuthController
+from ..repositories.AuthRepository import AuthRepository
+from ..services.AuthService import AuthService
+from ..dtos import authDtos 
 db_name ="gerenciamento_clientes"
 db_url ="mongodb://localhost:27017/"
 

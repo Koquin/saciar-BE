@@ -1,5 +1,5 @@
-from dtos .purchaseDtos import postPurchaseDto 
-from fastapi .responses import JSONResponse 
+from ..dtos.purchaseDtos import postPurchaseDto
+from fastapi.responses import JSONResponse 
 
 class PurchaseController :
 	def __init__ (self ,purchaseService ):
@@ -18,6 +18,7 @@ class PurchaseController :
 	def getAllPurchases (self ):
 		print (f'In PurchaseController, method: getAllPurchases')
 		response =self .purchaseService .getAllPurchases ()
+		print (f'PurchaseController returning {len (response )} purchases')
 		return response 
 
 	def search_purchases (self ,query :str ):

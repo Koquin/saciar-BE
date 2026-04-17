@@ -1,9 +1,9 @@
-from fastapi import APIRouter 
-from typing import List 
-from repositories .PrizeRepository import PrizeRepository 
-from services .PrizeService import PrizeService 
-from controllers .PrizeController import PrizeController 
-from dtos .ClienteDtos import UsePointsDto 
+from fastapi import APIRouter
+from typing import List
+from ..repositories.PrizeRepository import PrizeRepository
+from ..services.PrizeService import PrizeService
+from ..controllers.PrizeController import PrizeController
+from ..dtos.ClienteDtos import UsePointsDto 
 db_name ="gerenciamento_clientes"
 db_url ="mongodb://localhost:27017/"
 
@@ -17,6 +17,7 @@ router =APIRouter (prefix ="/prizes",tags =["Prizes"])
 def getAllPrizes ():
 	print ("In PrizeRouter, method: getAllPrizes")
 	response = prizeController.get_all_prizes ()
+	print (f'PrizeRouter returning: {response }')
 	return response 
 
 
@@ -24,6 +25,7 @@ def getAllPrizes ():
 def putPrizes (prizes :List [dict ]):
 	print (f'In PrizeRouter, method: putPrizes, variables: \nprizes: {prizes }')
 	success =prizeController.update_prizes (prizes )
+	print (f'PrizeRouter putPrizes success: {success }')
 	return {"success":bool (success )}
 
 

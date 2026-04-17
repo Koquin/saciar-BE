@@ -1,4 +1,4 @@
-from dtos .ClienteDtos import CreateClienteDto 
+from ..dtos.ClienteDtos import CreateClienteDto
 from typing import List 
 
 class ClienteController :

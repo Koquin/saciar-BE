@@ -1,5 +1,5 @@
-from pymongo import MongoClient 
-from models .Cliente import Cliente 
+from pymongo import MongoClient
+from ..models.Cliente import Cliente
 from typing import Optional 
 import re 
 from bson import ObjectId 

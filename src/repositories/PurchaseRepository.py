@@ -29,6 +29,7 @@ class PurchaseRepository :
             data ['id']=str (data ['_id'])
             del data ['_id']
             purchases .append (data )
+        print (f'PurchaseRepository returning {len (purchases )} purchases')
         return purchases 
 
     def search_purchases (self ,query :str )->list :

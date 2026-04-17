@@ -1,5 +1,5 @@
-from pymongo import MongoClient 
-from models .Redeem import Redeem 
+from pymongo import MongoClient
+from ..models.Redeem import Redeem
 from typing import Optional 
 import re 
 from bson import ObjectId 

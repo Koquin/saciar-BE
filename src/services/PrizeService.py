@@ -1,10 +1,10 @@
-import logging 
-from typing import Optional 
-from repositories .PrizeRepository import PrizeRepository 
-from repositories .ClienteRepository import ClienteRepository 
-from repositories .RedeemRepository import RedeemRepository
-from models .Redeem import Redeem
-from exceptions .ClienteNotFoundException import ClienteNotFoundException 
+import logging
+from typing import Optional
+from ..repositories.PrizeRepository import PrizeRepository
+from ..repositories.ClienteRepository import ClienteRepository
+from ..repositories.RedeemRepository import RedeemRepository
+from ..models.Redeem import Redeem
+from ..exceptions.ClienteNotFoundException import ClienteNotFoundException 
 
 logging .basicConfig (level =logging .INFO ,format ='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger =logging .getLogger (__name__ )
@@ -21,7 +21,9 @@ class PrizeService :
         logger .info ('In PrizeService, method: get_all_prizes')
         try :
             if self .prizeRepository and hasattr (self .prizeRepository ,'get_all_prizes'):
-                return self .prizeRepository .get_all_prizes ()
+                result = self .prizeRepository .get_all_prizes ()
+                logger .info (f'PrizeService returning: {result }')
+                return result
             return []
         except Exception as e :
             logger .error (f'Error getting prizes: {e }')
@@ -31,7 +33,9 @@ class PrizeService :
         logger .info (f'In PrizeService, method: update_prizes, variables: \nprizes_list: {prizes_list }')
         try :
             if self .prizeRepository and hasattr (self .prizeRepository ,'update_prizes'):
-                return self .prizeRepository .update_prizes (prizes_list )
+                result = self .prizeRepository .update_prizes (prizes_list )
+                logger .info (f'PrizeService update_prizes result: {result }')
+                return result
             return False 
         except Exception as e :
             logger .error (f'Error updating prizes: {e }')

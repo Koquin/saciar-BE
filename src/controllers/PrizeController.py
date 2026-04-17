@@ -5,11 +5,15 @@ class PrizeController :
 
     def get_all_prizes (self ):
         print ('In PrizeController, method: get_all_prizes')
-        return self .prizeService .get_all_prizes ()
+        response = self .prizeService .get_all_prizes ()
+        print (f'PrizeController returning: {response }')
+        return response
 
     def update_prizes (self ,prizes_list :list ):
         print (f'In PrizeController, method: update_prizes, variables: \nprizes_list: {prizes_list }')
-        return self .prizeService .update_prizes (prizes_list )
+        result = self .prizeService .update_prizes (prizes_list )
+        print (f'PrizeController update_prizes result: {result }')
+        return result
 
     def use_points (self ,cliente_id :str ,points :int ):
         print (f'In PrizeController, method: use_points, variables: \ncliente_id: {cliente_id }, points: {points }')

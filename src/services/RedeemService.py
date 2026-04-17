@@ -1,11 +1,11 @@
-import logging 
-from exceptions .ClienteNotFoundException import ClienteNotFoundException 
-from models .Redeem import Redeem 
-from datetime import datetime 
-from dtos .RedeemDtos import CreateRedeemDto 
-from typing import List 
-from repositories .PrizeRepository import PrizeRepository 
-from repositories .ClienteRepository import ClienteRepository 
+import logging
+from ..exceptions.ClienteNotFoundException import ClienteNotFoundException
+from ..models.Redeem import Redeem
+from datetime import datetime
+from ..dtos.RedeemDtos import CreateRedeemDto
+from typing import List
+from ..repositories.PrizeRepository import PrizeRepository
+from ..repositories.ClienteRepository import ClienteRepository 
 
 logging .basicConfig (level =logging .INFO ,format ='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger =logging .getLogger (__name__ )

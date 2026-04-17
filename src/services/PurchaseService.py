@@ -1,8 +1,8 @@
-import logging 
-from datetime import datetime 
-from typing import Optional 
+import logging
+from datetime import datetime
+from typing import Optional
 
-from repositories .ClienteRepository import ClienteRepository 
+from ..repositories.ClienteRepository import ClienteRepository 
 
 logging .basicConfig (level =logging .INFO ,format ='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger =logging .getLogger (__name__ )
@@ -143,7 +143,9 @@ class PurchaseService :
 		logger .info ('In PurchaseService, method: getAllPurchases')
 		try :
 			if self .purchaseRepository and hasattr (self .purchaseRepository ,'get_all_purchases'):
-				return self .purchaseRepository .get_all_purchases ()
+				result = self .purchaseRepository .get_all_purchases ()
+				logger .info (f'PurchaseService returning {len (result )} purchases')
+				return result
 			else :
 				logger .warning ('No purchaseRepository or get_all_purchases not implemented. Returning empty list.')
 				return []

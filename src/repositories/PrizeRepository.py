@@ -17,6 +17,7 @@ class PrizeRepository :
             data ['id']=str (data .get ('_id'))
             data .pop ('_id',None )
             prizes .append (data )
+        print (f'PrizeRepository returning: {prizes }')
         return prizes 
 
     def update_prizes (self ,prizes_list :list )->bool :
@@ -34,6 +35,7 @@ class PrizeRepository :
 
                         to_insert .append ({'premio':str (p )})
                 self .collection .insert_many (to_insert )
+            print (f'PrizeRepository updated {len (prizes_list )} prizes successfully')
             return True 
         except Exception as e :
             print (f'Error updating prizes in DB: {e }')

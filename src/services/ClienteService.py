@@ -1,10 +1,10 @@
-import logging 
-from exceptions .ClienteConflictException import ClienteConflictException 
-from models .Cliente import Cliente 
-from datetime import datetime 
-from exceptions .NoClientesFoundException import NoClientesFoundException 
-from exceptions .ClienteNotFoundException import ClienteNotFoundException 
-from dtos .ClienteDtos import CreateClienteDto 
+import logging
+from ..exceptions.ClienteConflictException import ClienteConflictException
+from ..models.Cliente import Cliente
+from datetime import datetime
+from ..exceptions.NoClientesFoundException import NoClientesFoundException
+from ..exceptions.ClienteNotFoundException import ClienteNotFoundException
+from ..dtos.ClienteDtos import CreateClienteDto
 from typing import List 
 
 logging .basicConfig (level =logging .INFO ,format ='%(asctime)s - %(name)s - %(levelname)s - %(message)s')

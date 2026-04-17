@@ -1,8 +1,8 @@
-from fastapi import APIRouter 
-from controllers .ClienteController import ClienteController 
-from repositories .ClienteRepository import ClienteRepository 
-from services .ClienteService import ClienteService 
-from dtos .ClienteDtos import CreateClienteDto ,UpdateClienteDto ,GetClienteByPhoneDto 
+from fastapi import APIRouter
+from ..controllers.ClienteController import ClienteController
+from ..repositories.ClienteRepository import ClienteRepository
+from ..services.ClienteService import ClienteService
+from ..dtos.ClienteDtos import CreateClienteDto, UpdateClienteDto, GetClienteByPhoneDto 
 from typing import List 
 from fastapi import Query 
 

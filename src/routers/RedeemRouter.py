@@ -1,10 +1,10 @@
-from fastapi import APIRouter 
-from controllers .RedeemController import RedeemController 
-from repositories .RedeemRepository import RedeemRepository 
-from repositories .PrizeRepository import PrizeRepository 
-from repositories .ClienteRepository import ClienteRepository 
-from services .RedeemService import RedeemService 
-from dtos .RedeemDtos import CreateRedeemDto ,UpdateRedeemDto 
+from fastapi import APIRouter
+from ..controllers.RedeemController import RedeemController
+from ..repositories.RedeemRepository import RedeemRepository
+from ..repositories.PrizeRepository import PrizeRepository
+from ..repositories.ClienteRepository import ClienteRepository
+from ..services.RedeemService import RedeemService
+from ..dtos.RedeemDtos import CreateRedeemDto, UpdateRedeemDto 
 from typing import List 
 from fastapi import Query 
 
